@@ -1,0 +1,59 @@
+<html>
+<head>
+  <title>Socket.io Echo Test</title>
+  <script src="socket.io/socket.io.js"></script>
+  <script>
+    const HOST = location.origin
+    const socket = io.connect("localhost:3060",{query: 'name=something'})
+
+    socket.on('connect', function() {
+      document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"
+
+      let data = {
+        user_id       : 200,
+        module_id        : 15,
+        agency_id     : 5,
+        minicall_id   : 1,
+        portal        : "demo-prueba-start",
+        filters : {
+          name1:"name1",
+          name2:"name2",
+          name3:"name3",
+          name4:"name4"
+        }
+        
+      }
+      socket.emit('track-log', data)
+
+
+
+      socket.on('track-log', function(msg) {
+        document.getElementById("output").innerHTML += "<p style='color: blue'>> RESPONSE: " + msg + "</p>"
+      })
+    })
+
+    function sendMessage(message) {
+      document.getElementById("output").innerHTML += "<p>> SENT: " + message + "</p>"
+      let data = {
+        user_id       : 200,
+        module_id        : 15,
+        agency_id     : 5,
+        minicall_id   : 1,
+        portal        : "demo-prueba",
+        filters : {
+          name1:"name1",
+          name2:"name2",
+          name3:"name3",
+          name4:"name4"
+        }
+        
+      }
+      socket.emit('track-log', data)
+    }
+  </script>
+</head>
+<body>
+  <input onkeypress="if(this.value) {if (window.event.keyCode == 13) { sendMessage(this.value); this.value = null }}"/>
+  <div id="output"></div>
+</body>
+</html>
